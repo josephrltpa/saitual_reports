@@ -6,22 +6,103 @@
   <title>Mizoram VB-G RAM G Reports Mirror (Saitual District)</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+          },
+          boxShadow: {
+            'soft': '0 2px 12px -2px rgba(15, 23, 42, 0.06), 0 1px 3px -1px rgba(15, 23, 42, 0.05)',
+            'glow': '0 0 0 1px rgba(99, 102, 241, 0.10), 0 8px 24px -6px rgba(99, 102, 241, 0.18)',
+          },
+          keyframes: {
+            fadeUp: {
+              '0%': { opacity: '0', transform: 'translateY(10px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            },
+            shimmer: {
+              '0%': { backgroundPosition: '-400px 0' },
+              '100%': { backgroundPosition: '400px 0' },
+            },
+          },
+          animation: {
+            'fade-up': 'fadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both',
+          },
+        },
+      },
+    };
+  </script>
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
     body { font-family: 'Inter', sans-serif; }
     .font-mono { font-family: 'JetBrains+Mono', monospace; }
+
+    /* Subtle page backdrop */
+    .page-backdrop {
+      background:
+        radial-gradient(1100px 380px at 85% -10%, rgba(99, 102, 241, 0.08), transparent 60%),
+        radial-gradient(900px 320px at 0% 0%, rgba(245, 158, 11, 0.06), transparent 55%),
+        linear-gradient(180deg, #f8fafc 0%, #f4f6fb 100%);
+    }
+
+    /* Header texture */
+    .header-glow {
+      background-image:
+        radial-gradient(600px 140px at 15% -40%, rgba(129, 140, 248, 0.35), transparent 70%),
+        radial-gradient(700px 160px at 85% -30%, rgba(245, 158, 11, 0.22), transparent 70%);
+    }
+
+    /* Slim, elegant scrollbars */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .thin-scroll::-webkit-scrollbar { height: 6px; width: 6px; }
+    .thin-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+    .thin-scroll::-webkit-scrollbar-track { background: transparent; }
+
+    /* Card hover lift */
+    .lift { transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
+    .lift:hover { transform: translateY(-2px); box-shadow: 0 10px 26px -10px rgba(15,23,42,.18); }
+
+    /* Table polish */
+    tbody tr { transition: background-color .15s ease; }
+    thead th:first-child { border-top-left-radius: .75rem; border-bottom-left-radius: .75rem; }
+    thead th:last-child { border-top-right-radius: .75rem; border-bottom-right-radius: .75rem; }
+
+    /* Modern select styling */
+    select { appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right .7rem center; padding-right: 2rem !important; }
+
+    /* Loading skeleton shimmer */
+    .skeleton {
+      background: linear-gradient(90deg, #eef1f6 25%, #e2e8f0 37%, #eef1f6 63%);
+      background-size: 800px 100%;
+      animation: shimmer 1.4s infinite linear;
+    }
+
+    /* Focus ring consistency */
+    input:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, .30);
+      border-radius: .75rem;
+    }
+
+    /* Reduced motion respect */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col antialiased">
+<body class="page-backdrop text-slate-900 min-h-screen flex flex-col antialiased">
 
   <!-- Header -->
-  <header class="bg-indigo-900 text-white shadow-md">
+  <header class="relative bg-gradient-to-r from-indigo-950 via-indigo-900 to-violet-900 text-white shadow-lg header-glow">
     <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3.5 flex items-center justify-between gap-2 sm:gap-4">
       <div class="flex items-center space-x-2.5 sm:space-x-3 min-w-0">
-        <div class="p-1.5 sm:p-2 bg-indigo-800 rounded-xl shadow-inner shrink-0">
-          <i data-lucide="layers" class="w-5 h-5 sm:w-6 sm:h-6 text-indigo-300"></i>
+        <div class="p-1.5 sm:p-2 bg-white/10 ring-1 ring-white/15 rounded-xl backdrop-blur-sm shrink-0 shadow-inner">
+          <i data-lucide="layers" class="w-5 h-5 sm:w-6 sm:h-6 text-amber-300"></i>
         </div>
         <div class="min-w-0">
           <div class="flex items-center gap-1.5 sm:gap-2">
@@ -31,27 +112,32 @@
           <p class="text-indigo-200 text-xs hidden sm:block">Saitual District Official Mirror • Unrestricted Fast Access</p>
         </div>
       </div>
-      <div class="flex items-center gap-2 text-xs bg-indigo-950/60 px-2.5 sm:px-3 py-1.5 rounded-xl border border-indigo-700/50 shrink-0" id="syncBadge">
-        <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-indigo-300 animate-spin"></i>
-        <span id="lastUpdatedText" class="text-indigo-200 text-[11px] sm:text-xs">Syncing...</span>
+      <div class="flex items-center gap-2 text-xs bg-white/10 backdrop-blur-sm px-2.5 sm:px-3 py-1.5 rounded-full border border-white/15 shrink-0 shadow-sm" id="syncBadge">
+        <span class="relative flex h-2 w-2 shrink-0">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
+        </span>
+        <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-indigo-200 animate-spin"></i>
+        <span id="lastUpdatedText" class="text-indigo-100 text-[11px] sm:text-xs font-medium">Syncing...</span>
       </div>
     </div>
+    <div class="h-0.5 bg-gradient-to-r from-amber-400 via-orange-400 to-amber-400 opacity-80"></div>
   </header>
 
   <!-- Single Sticky Wrapper for Village Bar + Nav Tabs (Zero-Overlap on Mobile & Desktop) -->
-  <div class="sticky top-0 z-40 shadow-lg">
+  <div class="sticky top-0 z-40 shadow-soft">
     <!-- Sticky Global Village Command Bar (Vibrant Amber/Gold - High Visibility) -->
-    <div class="bg-gradient-to-r from-amber-500 via-amber-600 to-orange-600 text-slate-950 border-b border-amber-700/80">
+    <div class="bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 text-slate-950 border-b border-amber-600/60">
       <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2 sm:py-2.5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 sm:gap-3">
         <div class="flex items-center justify-between sm:justify-start gap-2.5">
           <div class="flex items-center gap-2">
-            <div class="p-1.5 bg-amber-950/20 backdrop-blur-sm rounded-lg text-white shadow-inner flex items-center justify-center shrink-0">
-              <i data-lucide="map-pin" class="w-4 h-4 text-amber-100 animate-pulse"></i>
+            <div class="p-1.5 bg-white/25 backdrop-blur-sm rounded-lg shadow-inner flex items-center justify-center shrink-0 ring-1 ring-white/30">
+              <i data-lucide="map-pin" class="w-4 h-4 text-white animate-pulse"></i>
             </div>
             <div>
               <div class="flex items-center gap-1.5">
                 <span class="text-[10px] sm:text-[11px] font-black tracking-widest text-amber-950 uppercase">Scope:</span>
-                <span id="activeVillagePill" class="bg-white text-slate-900 text-[11px] sm:text-xs font-black px-2 py-0.5 rounded-full shadow-2xs">All 19 Villages</span>
+                <span id="activeVillagePill" class="bg-white text-slate-900 text-[11px] sm:text-xs font-black px-2 py-0.5 rounded-full shadow-sm ring-1 ring-black/5">All 19 Villages</span>
               </div>
             </div>
           </div>
@@ -62,12 +148,12 @@
         <div class="flex items-center gap-2 w-full sm:w-auto">
           <div class="relative flex-1 sm:w-80">
             <select id="globalVillageSelect" onchange="onGlobalVillageChange(this.value)" 
-                    class="w-full bg-white text-slate-900 font-bold text-xs sm:text-sm rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 pr-8 border-2 border-amber-300 shadow-sm focus:outline-none focus:ring-4 focus:ring-amber-300/60 cursor-pointer transition">
+                    class="w-full bg-white text-slate-900 font-bold text-xs sm:text-sm rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 pr-8 border border-amber-900/20 shadow-sm focus:outline-none focus:ring-4 focus:ring-amber-300/60 cursor-pointer transition">
               <option value="ALL">📍 All My 19 Villages (Combined)</option>
             </select>
           </div>
           <button onclick="onGlobalVillageChange('ALL')" 
-                  class="bg-amber-950 hover:bg-black text-white text-xs font-bold px-3 py-2 sm:py-2.5 rounded-xl transition shadow-xs whitespace-nowrap active:scale-95 shrink-0" 
+                  class="bg-amber-950/90 hover:bg-black text-white text-xs font-bold px-3 py-2 sm:py-2.5 rounded-xl transition shadow-sm whitespace-nowrap active:scale-95 shrink-0" 
                   title="Reset to view all 19 target villages">
             All Villages
           </button>
@@ -76,25 +162,25 @@
     </div>
 
     <!-- Navigation Tabs -->
-    <nav class="bg-white border-b border-slate-200">
+    <nav class="bg-white/85 backdrop-blur-md border-b border-slate-200/80">
       <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
         <div class="flex space-x-1.5 sm:space-x-3 overflow-x-auto py-2 sm:py-2.5 no-scrollbar scroll-smooth">
-          <button onclick="switchTab('jobcards')" id="tabBtn-jobcards" class="tab-btn px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg flex items-center gap-1.5 sm:gap-2 transition bg-indigo-50 text-indigo-700 border border-indigo-200 shrink-0">
+          <button onclick="switchTab('jobcards')" id="tabBtn-jobcards" class="tab-btn px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-xl flex items-center gap-1.5 sm:gap-2 transition bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-sm ring-1 ring-indigo-700/20 shrink-0">
             <i data-lucide="id-card" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
             <span>Active Job Cards</span>
-            <span id="jcBadgeCount" class="ml-0.5 sm:ml-1 bg-indigo-200 text-indigo-900 text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.2 sm:py-0.5 rounded-full font-bold">0</span>
+            <span id="jcBadgeCount" class="ml-0.5 sm:ml-1 bg-white/25 text-white text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.2 sm:py-0.5 rounded-full font-bold ring-1 ring-white/30">0</span>
           </button>
-          <button onclick="switchTab('muster')" id="tabBtn-muster" class="tab-btn px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg flex items-center gap-1.5 sm:gap-2 transition text-slate-600 hover:text-slate-900 hover:bg-slate-100 shrink-0">
+          <button onclick="switchTab('muster')" id="tabBtn-muster" class="tab-btn px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-xl flex items-center gap-1.5 sm:gap-2 transition text-slate-600 hover:text-indigo-700 hover:bg-indigo-50/70 shrink-0">
             <i data-lucide="clipboard-list" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
             <span>Muster Rolls (eMR)</span>
             <span id="emrBadgeCount" class="ml-0.5 sm:ml-1 bg-slate-200 text-slate-800 text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.2 sm:py-0.5 rounded-full font-bold">0</span>
           </button>
-          <button onclick="switchTab('works')" id="tabBtn-works" class="tab-btn px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg flex items-center gap-1.5 sm:gap-2 transition text-slate-600 hover:text-slate-900 hover:bg-slate-100 shrink-0">
+          <button onclick="switchTab('works')" id="tabBtn-works" class="tab-btn px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-xl flex items-center gap-1.5 sm:gap-2 transition text-slate-600 hover:text-indigo-700 hover:bg-indigo-50/70 shrink-0">
             <i data-lucide="hammer" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
             <span>Incomplete Works</span>
             <span id="worksBadgeCount" class="ml-0.5 sm:ml-1 bg-slate-200 text-slate-800 text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.2 sm:py-0.5 rounded-full font-bold">0</span>
           </button>
-          <button onclick="switchTab('financial')" id="tabBtn-financial" class="tab-btn px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg flex items-center gap-1.5 sm:gap-2 transition text-slate-600 hover:text-slate-900 hover:bg-slate-100 shrink-0">
+          <button onclick="switchTab('financial')" id="tabBtn-financial" class="tab-btn px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-xl flex items-center gap-1.5 sm:gap-2 transition text-slate-600 hover:text-indigo-700 hover:bg-indigo-50/70 shrink-0">
             <i data-lucide="bar-chart-3" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
             <span>Financials</span>
             <span id="finBadgeCount" class="ml-0.5 sm:ml-1 bg-slate-200 text-slate-800 text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.2 sm:py-0.5 rounded-full font-bold">0</span>
@@ -108,45 +194,64 @@
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full">
 
     <!-- Loading State -->
-    <div id="loadingState" class="py-20 text-center">
-      <div class="inline-block animate-spin rounded-full h-10 w-10 border-4 border-indigo-600 border-t-transparent mb-3"></div>
-      <p class="text-slate-500 font-medium">Fetching Saitual District synced data...</p>
+    <div id="loadingState" class="py-14">
+      <div class="flex flex-col items-center justify-center gap-3 mb-8">
+        <div class="relative h-12 w-12">
+          <div class="absolute inset-0 rounded-full bg-indigo-100"></div>
+          <div class="absolute inset-0 animate-spin rounded-full border-4 border-indigo-600 border-t-transparent"></div>
+          <div class="absolute inset-0 flex items-center justify-center"><i data-lucide="layers" class="w-5 h-5 text-indigo-500"></i></div>
+        </div>
+        <p class="text-slate-500 font-medium text-sm">Fetching Saitual District synced data<span class="animate-pulse">...</span></p>
+      </div>
+      <div class="max-w-4xl mx-auto space-y-3 px-2">
+        <div class="skeleton h-12 rounded-xl"></div>
+        <div class="skeleton h-72 rounded-2xl"></div>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="skeleton h-20 rounded-xl"></div><div class="skeleton h-20 rounded-xl"></div>
+          <div class="skeleton h-20 rounded-xl"></div><div class="skeleton h-20 rounded-xl"></div>
+        </div>
+      </div>
     </div>
 
     <!-- Error State -->
-    <div id="errorState" class="hidden bg-rose-50 border border-rose-200 rounded-xl p-6 text-center my-8">
-      <i data-lucide="alert-circle" class="w-8 h-8 text-rose-500 mx-auto mb-2"></i>
+    <div id="errorState" class="hidden bg-gradient-to-b from-rose-50 to-white border border-rose-200 rounded-2xl p-8 text-center my-8 shadow-soft">
+      <div class="mx-auto mb-3 h-14 w-14 rounded-2xl bg-rose-100 ring-8 ring-rose-50 flex items-center justify-center">
+        <i data-lucide="cloud-off" class="w-7 h-7 text-rose-500"></i>
+      </div>
       <h3 class="text-rose-900 font-bold text-lg">Unable to load data</h3>
-      <p class="text-rose-600 text-sm mt-1" id="errorMessage">Data file (latest.json) not found or still synchronizing.</p>
+      <p class="text-rose-600 text-sm mt-1 max-w-md mx-auto" id="errorMessage">Data file (latest.json) not found or still synchronizing.</p>
+      <button onclick="location.reload()" class="mt-4 inline-flex items-center gap-2 bg-rose-600 hover:bg-rose-700 text-white text-sm font-semibold px-4 py-2 rounded-xl transition active:scale-95 shadow-sm">
+        <i data-lucide="refresh-cw" class="w-4 h-4"></i> Retry Sync
+      </button>
     </div>
 
     <!-- TAB 1: ACTIVE JOB CARDS (PRIMARY REGISTER) -->
     <section id="tab-jobcards" class="tab-content hidden">
       <!-- In-Tab Active Village Banner -->
-      <div class="bg-gradient-to-r from-amber-500/10 via-amber-400/15 to-orange-500/10 border-2 border-amber-300 rounded-2xl p-3.5 mb-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
+      <div class="bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50/70 border border-amber-200 rounded-2xl p-3.5 mb-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-soft animate-fade-up">
         <div class="flex items-center gap-3">
-          <div class="p-2 bg-amber-500 text-white rounded-xl shadow-xs shrink-0 flex items-center justify-center">
+          <div class="p-2 bg-gradient-to-br from-amber-400 to-orange-500 text-white rounded-xl shadow-sm shrink-0 flex items-center justify-center ring-2 ring-amber-200/70">
             <i data-lucide="map-pin" class="w-4 h-4"></i>
           </div>
           <div>
-            <div class="text-[11px] font-black tracking-wider uppercase text-amber-800">Filtered Village Scope</div>
-            <div class="text-sm sm:text-base font-black text-amber-950 flex items-center gap-2">
+            <div class="text-[11px] font-bold tracking-wider uppercase text-amber-700">Filtered Village Scope</div>
+            <div class="text-sm sm:text-base font-extrabold text-amber-950 flex items-center gap-2">
               <span class="tab-active-village-name">All 19 Villages (Combined)</span>
-              <span class="text-[10px] bg-amber-200 text-amber-900 font-bold px-2 py-0.5 rounded-full">Active</span>
+              <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full ring-1 ring-emerald-200 inline-flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>Active</span>
             </div>
           </div>
         </div>
-        <button onclick="focusVillageSelect()" class="inline-flex items-center gap-1.5 text-xs font-black bg-amber-600 hover:bg-amber-700 text-white px-3.5 py-2 rounded-xl transition shadow-xs active:scale-95">
-          <i data-lucide="chevrons-up" class="w-4 h-4"></i>
-          <span>Change Village ▾</span>
+        <button onclick="focusVillageSelect()" class="inline-flex items-center gap-1.5 text-xs font-bold bg-white hover:bg-amber-50 text-amber-800 px-3.5 py-2 rounded-xl transition shadow-sm ring-1 ring-amber-300/70 active:scale-95">
+          <i data-lucide="map" class="w-4 h-4"></i>
+          <span>Change Village</span>
         </button>
       </div>
 
       <!-- Search & Filter Controls -->
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 mb-6">
+      <div class="bg-white rounded-2xl shadow-soft border border-slate-200/80 p-5 mb-6">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
           <div>
-            <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <h2 class="text-base sm:text-lg font-extrabold tracking-tight text-slate-900 flex items-center gap-2">
               <i data-lucide="id-card" class="w-5 h-5 text-indigo-600"></i>
               <span>Active Job Cards Register (Saitual District)</span>
             </h2>
@@ -163,7 +268,7 @@
             <!-- Search Input -->
             <div class="relative w-full sm:w-72">
               <input type="text" id="jcSearchInput" placeholder="Search by Job Card No. or Name..." 
-                     class="border border-slate-300 rounded-xl pl-9 pr-3 py-2 text-sm w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                     class="border border-slate-200 bg-slate-50/70 hover:bg-white rounded-xl pl-9 pr-3 py-2 text-sm w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent placeholder:text-slate-400 transition"
                      oninput="filterJobCards()">
               <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
             </div>
@@ -173,7 +278,7 @@
         <!-- Desktop Table View (md and up) -->
         <div class="hidden md:block overflow-x-auto">
           <table class="w-full text-left text-sm">
-            <thead class="bg-slate-50 text-slate-600 border-b border-slate-200 text-xs uppercase tracking-wider font-semibold">
+            <thead class="bg-slate-50/90 text-slate-500 border-b border-slate-200 text-[11px] uppercase tracking-widest font-bold">
               <tr>
                 <th class="py-3 px-3 w-16">#</th>
                 <th class="py-3 px-3">Job Card No.</th>
@@ -207,11 +312,11 @@
             </select>
           </div>
           <div class="flex items-center gap-1.5" id="jcPaginationButtons">
-            <button onclick="gotoJobCardPage(1)" id="btnFirst" class="px-2.5 py-1 rounded border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 disabled:opacity-40 disabled:cursor-not-allowed">« First</button>
-            <button onclick="gotoJobCardPage(jcCurrentPage - 1)" id="btnPrev" class="px-2.5 py-1 rounded border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 disabled:opacity-40 disabled:cursor-not-allowed">‹ Prev</button>
+            <button onclick="gotoJobCardPage(1)" id="btnFirst" class="px-3 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-indigo-50 hover:border-indigo-200 hover:text-indigo-700 text-slate-700 font-medium transition disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-slate-200 disabled:hover:text-slate-700">« First</button>
+            <button onclick="gotoJobCardPage(jcCurrentPage - 1)" id="btnPrev" class="px-3 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-indigo-50 hover:border-indigo-200 hover:text-indigo-700 text-slate-700 font-medium transition disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-slate-200 disabled:hover:text-slate-700">‹ Prev</button>
             <span class="px-2 py-1 font-semibold text-slate-800" id="jcPageIndicator">Page 1 of 1</span>
-            <button onclick="gotoJobCardPage(jcCurrentPage + 1)" id="btnNext" class="px-2.5 py-1 rounded border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 disabled:opacity-40 disabled:cursor-not-allowed">Next ›</button>
-            <button onclick="gotoJobCardPage(jcTotalPages)" id="btnLast" class="px-2.5 py-1 rounded border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 disabled:opacity-40 disabled:cursor-not-allowed">Last »</button>
+            <button onclick="gotoJobCardPage(jcCurrentPage + 1)" id="btnNext" class="px-3 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-indigo-50 hover:border-indigo-200 hover:text-indigo-700 text-slate-700 font-medium transition disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-slate-200 disabled:hover:text-slate-700">Next ›</button>
+            <button onclick="gotoJobCardPage(jcTotalPages)" id="btnLast" class="px-3 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-indigo-50 hover:border-indigo-200 hover:text-indigo-700 text-slate-700 font-medium transition disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-slate-200 disabled:hover:text-slate-700">Last »</button>
           </div>
         </div>
       </div>
@@ -220,30 +325,30 @@
     <!-- TAB 2: MUSTER ROLLS (eMR) -->
     <section id="tab-muster" class="tab-content hidden">
       <!-- In-Tab Active Village Banner -->
-      <div class="bg-gradient-to-r from-amber-500/10 via-amber-400/15 to-orange-500/10 border-2 border-amber-300 rounded-2xl p-3.5 mb-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
+      <div class="bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50/70 border border-amber-200 rounded-2xl p-3.5 mb-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-soft animate-fade-up">
         <div class="flex items-center gap-3">
-          <div class="p-2 bg-amber-500 text-white rounded-xl shadow-xs shrink-0 flex items-center justify-center">
+          <div class="p-2 bg-gradient-to-br from-amber-400 to-orange-500 text-white rounded-xl shadow-sm shrink-0 flex items-center justify-center ring-2 ring-amber-200/70">
             <i data-lucide="map-pin" class="w-4 h-4"></i>
           </div>
           <div>
-            <div class="text-[11px] font-black tracking-wider uppercase text-amber-800">Filtered Village Scope</div>
-            <div class="text-sm sm:text-base font-black text-amber-950 flex items-center gap-2">
+            <div class="text-[11px] font-bold tracking-wider uppercase text-amber-700">Filtered Village Scope</div>
+            <div class="text-sm sm:text-base font-extrabold text-amber-950 flex items-center gap-2">
               <span class="tab-active-village-name">All 19 Villages (Combined)</span>
-              <span class="text-[10px] bg-amber-200 text-amber-900 font-bold px-2 py-0.5 rounded-full">Active</span>
+              <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full ring-1 ring-emerald-200 inline-flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>Active</span>
             </div>
           </div>
         </div>
-        <button onclick="focusVillageSelect()" class="inline-flex items-center gap-1.5 text-xs font-black bg-amber-600 hover:bg-amber-700 text-white px-3.5 py-2 rounded-xl transition shadow-xs active:scale-95">
-          <i data-lucide="chevrons-up" class="w-4 h-4"></i>
-          <span>Change Village ▾</span>
+        <button onclick="focusVillageSelect()" class="inline-flex items-center gap-1.5 text-xs font-bold bg-white hover:bg-amber-50 text-amber-800 px-3.5 py-2 rounded-xl transition shadow-sm ring-1 ring-amber-300/70 active:scale-95">
+          <i data-lucide="map" class="w-4 h-4"></i>
+          <span>Change Village</span>
         </button>
       </div>
 
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 mb-6">
+      <div class="bg-white rounded-2xl shadow-soft border border-slate-200/80 p-5 mb-6">
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-4">
           <div>
             <div class="flex items-center gap-2">
-              <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+              <h2 class="text-base sm:text-lg font-extrabold tracking-tight text-slate-900 flex items-center gap-2">
                 <i data-lucide="clipboard-list" class="w-5 h-5 text-indigo-600"></i>
                 <span>Muster Rolls Directory (eMR)</span>
               </h2>
@@ -257,7 +362,7 @@
             <!-- View Mode Switcher -->
             <div class="bg-slate-100 p-1 rounded-xl flex items-center text-xs font-semibold shrink-0 border border-slate-200">
               <button id="emrViewModeCompact" onclick="setEmrViewMode('compact')" 
-                      class="px-3 py-1.5 rounded-lg bg-white text-indigo-700 shadow-xs flex items-center gap-1.5 transition font-semibold">
+                      class="px-3 py-1.5 rounded-lg bg-white text-indigo-700 shadow-sm ring-1 ring-indigo-100 flex items-center gap-1.5 transition font-semibold">
                 <i data-lucide="layers" class="w-3.5 h-3.5"></i>
                 <span>Compact (By Month & Work)</span>
               </button>
@@ -271,7 +376,7 @@
             <!-- Search Input -->
             <div class="relative w-full sm:w-64">
               <input type="text" id="emrSearchInput" placeholder="Search work, eMR No, or GP..." 
-                     class="border border-slate-300 rounded-xl pl-9 pr-3 py-2 text-sm w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                     class="border border-slate-200 bg-slate-50/70 hover:bg-white rounded-xl pl-9 pr-3 py-2 text-sm w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent placeholder:text-slate-400 transition"
                      oninput="onEmrSearchInput()">
               <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
             </div>
@@ -292,7 +397,7 @@
         <div id="emrTableView" class="mt-4 hidden">
           <div class="overflow-x-auto">
             <table class="w-full text-left text-sm">
-              <thead class="bg-slate-50 text-slate-600 border-b border-slate-200 text-xs uppercase tracking-wider font-semibold">
+              <thead class="bg-slate-50/90 text-slate-500 border-b border-slate-200 text-[11px] uppercase tracking-widest font-bold">
                 <tr>
                   <th class="py-3 px-3 w-24">eMR No.</th>
                   <th class="py-3 px-3 w-36">Gram Panchayat</th>
@@ -321,11 +426,11 @@
               </select>
             </div>
             <div class="flex items-center gap-1.5" id="emrPaginationButtons">
-              <button onclick="gotoMusterPage(1)" id="btnEmrFirst" class="px-2.5 py-1 rounded border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 disabled:opacity-40 disabled:cursor-not-allowed">« First</button>
-              <button onclick="gotoMusterPage(emrCurrentPage - 1)" id="btnEmrPrev" class="px-2.5 py-1 rounded border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 disabled:opacity-40 disabled:cursor-not-allowed">‹ Prev</button>
+              <button onclick="gotoMusterPage(1)" id="btnEmrFirst" class="px-3 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-indigo-50 hover:border-indigo-200 hover:text-indigo-700 text-slate-700 font-medium transition disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-slate-200 disabled:hover:text-slate-700">« First</button>
+              <button onclick="gotoMusterPage(emrCurrentPage - 1)" id="btnEmrPrev" class="px-3 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-indigo-50 hover:border-indigo-200 hover:text-indigo-700 text-slate-700 font-medium transition disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-slate-200 disabled:hover:text-slate-700">‹ Prev</button>
               <span class="px-2 py-1 font-semibold text-slate-800" id="emrPageIndicator">Page 1 of 1</span>
-              <button onclick="gotoMusterPage(emrCurrentPage + 1)" id="btnEmrNext" class="px-2.5 py-1 rounded border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 disabled:opacity-40 disabled:cursor-not-allowed">Next ›</button>
-              <button onclick="gotoMusterPage(emrTotalPages)" id="btnEmrLast" class="px-2.5 py-1 rounded border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 disabled:opacity-40 disabled:cursor-not-allowed">Last »</button>
+              <button onclick="gotoMusterPage(emrCurrentPage + 1)" id="btnEmrNext" class="px-3 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-indigo-50 hover:border-indigo-200 hover:text-indigo-700 text-slate-700 font-medium transition disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-slate-200 disabled:hover:text-slate-700">Next ›</button>
+              <button onclick="gotoMusterPage(emrTotalPages)" id="btnEmrLast" class="px-3 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-indigo-50 hover:border-indigo-200 hover:text-indigo-700 text-slate-700 font-medium transition disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-slate-200 disabled:hover:text-slate-700">Last »</button>
             </div>
           </div>
         </div>
@@ -335,53 +440,77 @@
     <!-- TAB 3: INCOMPLETE WORKS -->
     <section id="tab-works" class="tab-content hidden">
       <!-- In-Tab Active Village Banner -->
-      <div class="bg-gradient-to-r from-amber-500/10 via-amber-400/15 to-orange-500/10 border-2 border-amber-300 rounded-2xl p-3.5 mb-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
+      <div class="bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50/70 border border-amber-200 rounded-2xl p-3.5 mb-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-soft animate-fade-up">
         <div class="flex items-center gap-3">
-          <div class="p-2 bg-amber-500 text-white rounded-xl shadow-xs shrink-0 flex items-center justify-center">
+          <div class="p-2 bg-gradient-to-br from-amber-400 to-orange-500 text-white rounded-xl shadow-sm shrink-0 flex items-center justify-center ring-2 ring-amber-200/70">
             <i data-lucide="map-pin" class="w-4 h-4"></i>
           </div>
           <div>
-            <div class="text-[11px] font-black tracking-wider uppercase text-amber-800">Filtered Village Scope</div>
-            <div class="text-sm sm:text-base font-black text-amber-950 flex items-center gap-2">
+            <div class="text-[11px] font-bold tracking-wider uppercase text-amber-700">Filtered Village Scope</div>
+            <div class="text-sm sm:text-base font-extrabold text-amber-950 flex items-center gap-2">
               <span class="tab-active-village-name">All 19 Villages (Combined)</span>
-              <span class="text-[10px] bg-amber-200 text-amber-900 font-bold px-2 py-0.5 rounded-full">Active</span>
+              <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full ring-1 ring-emerald-200 inline-flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>Active</span>
             </div>
           </div>
         </div>
-        <button onclick="focusVillageSelect()" class="inline-flex items-center gap-1.5 text-xs font-black bg-amber-600 hover:bg-amber-700 text-white px-3.5 py-2 rounded-xl transition shadow-xs active:scale-95">
-          <i data-lucide="chevrons-up" class="w-4 h-4"></i>
-          <span>Change Village ▾</span>
+        <button onclick="focusVillageSelect()" class="inline-flex items-center gap-1.5 text-xs font-bold bg-white hover:bg-amber-50 text-amber-800 px-3.5 py-2 rounded-xl transition shadow-sm ring-1 ring-amber-300/70 active:scale-95">
+          <i data-lucide="map" class="w-4 h-4"></i>
+          <span>Change Village</span>
         </button>
       </div>
 
       <!-- KPI Stats -->
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-          <div class="text-xs text-slate-500 font-medium">Total Works Started</div>
-          <div class="text-2xl font-bold text-slate-800 mt-1" id="kpiStarted">0</div>
+        <div class="lift bg-white p-4 rounded-2xl border border-slate-200 shadow-soft relative overflow-hidden">
+          <div class="absolute -right-4 -top-4 h-16 w-16 rounded-full bg-slate-100/80"></div>
+          <div class="flex items-center gap-3">
+            <div class="p-2.5 rounded-xl bg-gradient-to-br from-slate-600 to-slate-800 text-white shadow-sm shrink-0"><i data-lucide="hammer" class="w-4 h-4"></i></div>
+            <div>
+              <div class="text-[11px] text-slate-500 font-semibold uppercase tracking-wide">Total Works Started</div>
+              <div class="text-2xl font-extrabold text-slate-800" id="kpiStarted">0</div>
+            </div>
+          </div>
         </div>
-        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-          <div class="text-xs text-emerald-600 font-medium">Completed Works</div>
-          <div class="text-2xl font-bold text-emerald-700 mt-1" id="kpiCompleted">0</div>
+        <div class="lift bg-white p-4 rounded-2xl border border-slate-200 shadow-soft relative overflow-hidden">
+          <div class="absolute -right-4 -top-4 h-16 w-16 rounded-full bg-emerald-100/70"></div>
+          <div class="flex items-center gap-3">
+            <div class="p-2.5 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-sm shrink-0"><i data-lucide="check-circle-2" class="w-4 h-4"></i></div>
+            <div>
+              <div class="text-[11px] text-emerald-600 font-semibold uppercase tracking-wide">Completed Works</div>
+              <div class="text-2xl font-extrabold text-emerald-700" id="kpiCompleted">0</div>
+            </div>
+          </div>
         </div>
-        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-          <div class="text-xs text-amber-600 font-medium">Not Yet Completed</div>
-          <div class="text-2xl font-bold text-amber-700 mt-1" id="kpiIncomplete">0</div>
+        <div class="lift bg-white p-4 rounded-2xl border border-slate-200 shadow-soft relative overflow-hidden">
+          <div class="absolute -right-4 -top-4 h-16 w-16 rounded-full bg-amber-100/70"></div>
+          <div class="flex items-center gap-3">
+            <div class="p-2.5 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 text-white shadow-sm shrink-0"><i data-lucide="clock" class="w-4 h-4"></i></div>
+            <div>
+              <div class="text-[11px] text-amber-600 font-semibold uppercase tracking-wide">Not Yet Completed</div>
+              <div class="text-2xl font-extrabold text-amber-700" id="kpiIncomplete">0</div>
+            </div>
+          </div>
         </div>
-        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-          <div class="text-xs text-indigo-600 font-medium">District Completion Rate</div>
-          <div class="text-2xl font-bold text-indigo-700 mt-1" id="kpiRate">0%</div>
+        <div class="lift bg-white p-4 rounded-2xl border border-slate-200 shadow-soft relative overflow-hidden">
+          <div class="absolute -right-4 -top-4 h-16 w-16 rounded-full bg-indigo-100/70"></div>
+          <div class="flex items-center gap-3">
+            <div class="p-2.5 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 text-white shadow-sm shrink-0"><i data-lucide="trending-up" class="w-4 h-4"></i></div>
+            <div>
+              <div class="text-[11px] text-indigo-600 font-semibold uppercase tracking-wide">District Completion Rate</div>
+              <div class="text-2xl font-extrabold text-indigo-700" id="kpiRate">0%</div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+      <div class="bg-white rounded-2xl shadow-soft border border-slate-200/80 p-5">
         <h2 class="text-lg font-bold text-slate-900 mb-3 flex items-center gap-2">
           <i data-lucide="hammer" class="w-5 h-5 text-indigo-600"></i>
           <span>Panchayat Works Breakdown</span>
         </h2>
         <div class="overflow-x-auto">
           <table class="w-full text-left text-sm">
-            <thead class="bg-slate-50 text-slate-600 border-b border-slate-200 text-xs uppercase tracking-wider font-semibold">
+            <thead class="bg-slate-50/90 text-slate-500 border-b border-slate-200 text-[11px] uppercase tracking-widest font-bold">
               <tr>
                 <th class="py-3 px-3">Panchayat</th>
                 <th class="py-3 px-3">Started</th>
@@ -399,10 +528,10 @@
       </div>
 
       <!-- Ongoing Works Detailed Directory -->
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 mt-6">
+      <div class="bg-white rounded-2xl shadow-soft border border-slate-200/80 p-5 mt-6">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 pb-3 border-b border-slate-100">
           <div>
-            <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <h2 class="text-base sm:text-lg font-extrabold tracking-tight text-slate-900 flex items-center gap-2">
               <i data-lucide="list-todo" class="w-5 h-5 text-amber-600"></i>
               <span>Active Ongoing Works Directory</span>
             </h2>
@@ -420,50 +549,74 @@
     <!-- TAB 4: FINANCIALS -->
     <section id="tab-financial" class="tab-content hidden">
       <!-- In-Tab Active Village Banner -->
-      <div class="bg-gradient-to-r from-amber-500/10 via-amber-400/15 to-orange-500/10 border-2 border-amber-300 rounded-2xl p-3.5 mb-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
+      <div class="bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50/70 border border-amber-200 rounded-2xl p-3.5 mb-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-soft animate-fade-up">
         <div class="flex items-center gap-3">
-          <div class="p-2 bg-amber-500 text-white rounded-xl shadow-xs shrink-0 flex items-center justify-center">
+          <div class="p-2 bg-gradient-to-br from-amber-400 to-orange-500 text-white rounded-xl shadow-sm shrink-0 flex items-center justify-center ring-2 ring-amber-200/70">
             <i data-lucide="map-pin" class="w-4 h-4"></i>
           </div>
           <div>
-            <div class="text-[11px] font-black tracking-wider uppercase text-amber-800">Filtered Village Scope</div>
-            <div class="text-sm sm:text-base font-black text-amber-950 flex items-center gap-2">
+            <div class="text-[11px] font-bold tracking-wider uppercase text-amber-700">Filtered Village Scope</div>
+            <div class="text-sm sm:text-base font-extrabold text-amber-950 flex items-center gap-2">
               <span class="tab-active-village-name">All 19 Villages (Combined)</span>
-              <span class="text-[10px] bg-amber-200 text-amber-900 font-bold px-2 py-0.5 rounded-full">Active</span>
+              <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full ring-1 ring-emerald-200 inline-flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>Active</span>
             </div>
           </div>
         </div>
-        <button onclick="focusVillageSelect()" class="inline-flex items-center gap-1.5 text-xs font-black bg-amber-600 hover:bg-amber-700 text-white px-3.5 py-2 rounded-xl transition shadow-xs active:scale-95">
-          <i data-lucide="chevrons-up" class="w-4 h-4"></i>
-          <span>Change Village ▾</span>
+        <button onclick="focusVillageSelect()" class="inline-flex items-center gap-1.5 text-xs font-bold bg-white hover:bg-amber-50 text-amber-800 px-3.5 py-2 rounded-xl transition shadow-sm ring-1 ring-amber-300/70 active:scale-95">
+          <i data-lucide="map" class="w-4 h-4"></i>
+          <span>Change Village</span>
         </button>
       </div>
 
       <!-- Top Financial KPI Cards -->
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-          <div class="text-xs text-slate-500 font-medium">Funds Released (Current Year)</div>
-          <div class="text-2xl font-bold text-slate-800 mt-1" id="kpiFinRelease">₹0 L</div>
+        <div class="lift bg-white p-4 rounded-2xl border border-slate-200 shadow-soft relative overflow-hidden">
+          <div class="absolute -right-4 -top-4 h-16 w-16 rounded-full bg-indigo-100/70"></div>
+          <div class="flex items-center gap-3">
+            <div class="p-2.5 rounded-xl bg-gradient-to-br from-indigo-500 to-blue-600 text-white shadow-sm shrink-0"><i data-lucide="landmark" class="w-4 h-4"></i></div>
+            <div>
+              <div class="text-[11px] text-slate-500 font-semibold uppercase tracking-wide">Funds Released (Year)</div>
+              <div class="text-2xl font-extrabold text-slate-800" id="kpiFinRelease">₹0 L</div>
+            </div>
+          </div>
         </div>
-        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-          <div class="text-xs text-emerald-600 font-medium">Unskilled Wage Expenditure</div>
-          <div class="text-2xl font-bold text-emerald-700 mt-1" id="kpiFinWage">₹0 L</div>
+        <div class="lift bg-white p-4 rounded-2xl border border-slate-200 shadow-soft relative overflow-hidden">
+          <div class="absolute -right-4 -top-4 h-16 w-16 rounded-full bg-emerald-100/70"></div>
+          <div class="flex items-center gap-3">
+            <div class="p-2.5 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-sm shrink-0"><i data-lucide="wallet" class="w-4 h-4"></i></div>
+            <div>
+              <div class="text-[11px] text-emerald-600 font-semibold uppercase tracking-wide">Unskilled Wage Exp.</div>
+              <div class="text-2xl font-extrabold text-emerald-700" id="kpiFinWage">₹0 L</div>
+            </div>
+          </div>
         </div>
-        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-          <div class="text-xs text-indigo-600 font-medium">Material Expenditure</div>
-          <div class="text-2xl font-bold text-indigo-700 mt-1" id="kpiFinMat">₹0 L</div>
+        <div class="lift bg-white p-4 rounded-2xl border border-slate-200 shadow-soft relative overflow-hidden">
+          <div class="absolute -right-4 -top-4 h-16 w-16 rounded-full bg-violet-100/70"></div>
+          <div class="flex items-center gap-3">
+            <div class="p-2.5 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 text-white shadow-sm shrink-0"><i data-lucide="package" class="w-4 h-4"></i></div>
+            <div>
+              <div class="text-[11px] text-indigo-600 font-semibold uppercase tracking-wide">Material Expenditure</div>
+              <div class="text-2xl font-extrabold text-indigo-700" id="kpiFinMat">₹0 L</div>
+            </div>
+          </div>
         </div>
-        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-          <div class="text-xs text-amber-600 font-medium">Total Payment Due</div>
-          <div class="text-2xl font-bold text-amber-700 mt-1" id="kpiFinDue">₹0 L</div>
+        <div class="lift bg-white p-4 rounded-2xl border border-slate-200 shadow-soft relative overflow-hidden">
+          <div class="absolute -right-4 -top-4 h-16 w-16 rounded-full bg-amber-100/70"></div>
+          <div class="flex items-center gap-3">
+            <div class="p-2.5 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 text-white shadow-sm shrink-0"><i data-lucide="alert-circle" class="w-4 h-4"></i></div>
+            <div>
+              <div class="text-[11px] text-amber-600 font-semibold uppercase tracking-wide">Total Payment Due</div>
+              <div class="text-2xl font-extrabold text-amber-700" id="kpiFinDue">₹0 L</div>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- Section 1: Gram Panchayat Financial Overview -->
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 mb-6">
+      <div class="bg-white rounded-2xl shadow-soft border border-slate-200/80 p-5 mb-6">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
           <div>
-            <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <h2 class="text-base sm:text-lg font-extrabold tracking-tight text-slate-900 flex items-center gap-2">
               <i data-lucide="landmark" class="w-5 h-5 text-indigo-600"></i>
               <span>Gram Panchayat Financial Overview</span>
             </h2>
@@ -477,7 +630,7 @@
 
         <div class="overflow-x-auto">
           <table class="w-full text-left text-sm">
-            <thead class="bg-slate-50 text-slate-600 border-b border-slate-200 text-xs uppercase tracking-wider font-semibold">
+            <thead class="bg-slate-50/90 text-slate-500 border-b border-slate-200 text-[11px] uppercase tracking-widest font-bold">
               <tr>
                 <th class="py-3 px-3">Gram Panchayat</th>
                 <th class="py-3 px-3 text-right">Released (₹ Lakhs)</th>
@@ -496,17 +649,17 @@
       </div>
 
       <!-- Section 2: Master Works & Wage Disbursements -->
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 mb-6">
+      <div class="bg-white rounded-2xl shadow-soft border border-slate-200/80 p-5 mb-6">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
           <div>
-            <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <h2 class="text-base sm:text-lg font-extrabold tracking-tight text-slate-900 flex items-center gap-2">
               <i data-lucide="bar-chart-3" class="w-5 h-5 text-indigo-600"></i>
               <span>Master Works & Muster Roll Disbursements</span>
             </h2>
             <p class="text-slate-500 text-xs">Specific development works with linked muster roll payment slips.</p>
           </div>
           <input type="text" id="financialSearchInput" placeholder="Search work name, code, or GP..." 
-                 class="border border-slate-300 rounded-xl px-3 py-2 text-sm w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                 class="border border-slate-200 bg-slate-50/70 hover:bg-white rounded-xl px-3 py-2 text-sm w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent placeholder:text-slate-400 transition"
                  oninput="filterFinancialWorks()">
         </div>
 
@@ -516,7 +669,7 @@
 
         <div class="overflow-x-auto">
           <table class="w-full text-left text-sm" id="financialTable">
-            <thead class="bg-slate-50 text-slate-600 border-b border-slate-200 text-xs uppercase tracking-wider font-semibold">
+            <thead class="bg-slate-50/90 text-slate-500 border-b border-slate-200 text-[11px] uppercase tracking-widest font-bold">
               <tr>
                 <th class="py-3 px-3 w-40">Gram Panchayat</th>
                 <th class="py-3 px-3">Work Name & Code</th>
@@ -536,10 +689,11 @@
 
   <!-- WORKER PAYMENT PASSBOOK MODAL / PAGE LAUNCHER -->
   <div id="passbookModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-2 sm:p-6 overflow-y-auto">
-    <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[94vh] flex flex-col overflow-hidden border border-slate-200 animate-in fade-in zoom-in-95 duration-200">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[94vh] flex flex-col overflow-hidden border border-slate-200 animate-fade-up">
       
       <!-- Modal Header -->
-      <div class="bg-gradient-to-r from-indigo-900 to-indigo-800 text-white p-4 sm:p-5 flex items-start justify-between gap-3">
+      <div class="relative bg-gradient-to-br from-indigo-950 via-indigo-900 to-violet-900 text-white p-4 sm:p-5 flex items-start justify-between gap-3 overflow-hidden">
+        <div class="absolute -right-8 -top-10 h-32 w-32 rounded-full bg-amber-400/15 blur-2xl pointer-events-none"></div>
         <div class="min-w-0">
           <div class="flex items-center gap-2">
             <span class="text-[11px] bg-emerald-500 text-white font-bold px-2 py-0.5 rounded uppercase tracking-wider" id="modalPanchayat">Panchayat</span>
@@ -580,8 +734,18 @@
   </div>
 
   <!-- Footer -->
-  <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500">
-    Data mirrored from <a href="https://vbgramgrep.dord.gov.in" target="_blank" class="underline hover:text-indigo-600">dord.gov.in (MoRD)</a> | Saitual District Community Mirror
+  <footer class="bg-white/80 backdrop-blur-sm border-t border-slate-200/80 py-5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
+      <div class="flex items-center gap-2">
+        <span class="inline-flex items-center justify-center h-6 w-6 rounded-lg bg-gradient-to-br from-indigo-600 to-violet-600 text-white shadow-sm"><i data-lucide="layers" class="w-3.5 h-3.5"></i></span>
+        <span class="font-semibold text-slate-600">Saitual District Community Mirror</span>
+      </div>
+      <p>Data mirrored from
+        <a href="https://vbgramgrep.dord.gov.in" target="_blank" class="inline-flex items-center gap-1 text-indigo-600 font-semibold hover:text-indigo-800 hover:underline underline-offset-2 transition">
+          dord.gov.in (MoRD) <i data-lucide="external-link" class="w-3 h-3"></i>
+        </a>
+      </p>
+    </div>
   </footer>
 
   <script>
@@ -685,8 +849,11 @@
     function switchTab(tabId) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
       document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('bg-indigo-50', 'text-indigo-700', 'border', 'border-indigo-200');
-        btn.classList.add('text-slate-600');
+        btn.classList.remove('bg-gradient-to-r', 'from-indigo-600', 'to-violet-600', 'text-white', 'shadow-sm', 'ring-1', 'ring-indigo-700/20');
+        btn.classList.add('text-slate-600', 'hover:text-indigo-700', 'hover:bg-indigo-50/70');
+        // reset count badge to neutral
+        const b = btn.querySelector('span:last-child');
+        if (b) b.className = 'ml-0.5 sm:ml-1 bg-slate-200 text-slate-800 text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.2 sm:py-0.5 rounded-full font-bold';
       });
 
       const activeSection = document.getElementById('tab-' + tabId);
@@ -694,8 +861,10 @@
 
       const activeBtn = document.getElementById('tabBtn-' + tabId);
       if (activeBtn) {
-        activeBtn.classList.remove('text-slate-600');
-        activeBtn.classList.add('bg-indigo-50', 'text-indigo-700', 'border', 'border-indigo-200');
+        activeBtn.classList.remove('text-slate-600', 'hover:text-indigo-700', 'hover:bg-indigo-50/70');
+        activeBtn.classList.add('bg-gradient-to-r', 'from-indigo-600', 'to-violet-600', 'text-white', 'shadow-sm', 'ring-1', 'ring-indigo-700/20');
+        const ab = activeBtn.querySelector('span:last-child');
+        if (ab) ab.className = 'ml-0.5 sm:ml-1 bg-white/25 text-white text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.2 sm:py-0.5 rounded-full font-bold ring-1 ring-white/30';
       }
       lucide.createIcons();
     }
@@ -871,7 +1040,7 @@
             </td>
             <td class="py-2.5 px-3 text-right space-x-2">
               <button onclick="launchWorkerPassbook('${j.job_card_no}', '${cleanName}', '${cleanPanchayat}', '${cleanBlock}')" 
-                      class="inline-flex items-center gap-1.5 text-xs bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-lg shadow-sm font-semibold transition">
+                      class="inline-flex items-center gap-1.5 text-xs bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white px-3 py-1.5 rounded-lg shadow-sm font-semibold transition active:scale-95">
                 <i data-lucide="credit-card" class="w-3.5 h-3.5"></i>
                 <span>View Passbook</span>
               </button>
@@ -886,7 +1055,7 @@
         // 2. Mobile Touch Card
         if (mobileContainer) {
           const card = document.createElement('div');
-          card.className = "bg-white rounded-xl border border-slate-200 p-3.5 shadow-2xs space-y-2.5 hover:border-indigo-300 transition";
+          card.className = "lift bg-white rounded-xl border border-slate-200/80 p-3.5 shadow-soft space-y-2.5 hover:border-indigo-300";
           card.innerHTML = `
             <div class="flex items-start justify-between gap-2">
               <div>
@@ -906,7 +1075,7 @@
 
             <div class="flex items-center gap-2 pt-2 border-t border-slate-100">
               <button onclick="launchWorkerPassbook('${j.job_card_no}', '${cleanName}', '${cleanPanchayat}', '${cleanBlock}')" 
-                      class="flex-1 inline-flex items-center justify-center gap-1.5 text-xs bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-bold shadow-xs active:scale-95 transition">
+                      class="flex-1 inline-flex items-center justify-center gap-1.5 text-xs bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white py-2 rounded-lg font-bold shadow-sm active:scale-95 transition">
                 <i data-lucide="credit-card" class="w-3.5 h-3.5"></i>
                 <span>View Passbook</span>
               </button>
@@ -1252,10 +1421,10 @@
         monthSection.innerHTML = `
           <!-- Collapsible Month Header -->
           <div onclick="toggleMonthCollapse('${monthCardId}', '${iconId}')" 
-               class="bg-gradient-to-r from-slate-50 via-indigo-50/30 to-slate-50 hover:bg-slate-100/70 p-3 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 cursor-pointer select-none transition border-b border-slate-200">
+               class="bg-gradient-to-r from-indigo-50/70 via-slate-50 to-emerald-50/40 hover:from-indigo-100/70 hover:to-emerald-100/50 p-3 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 cursor-pointer select-none transition border-b border-slate-200">
             <div class="flex items-center justify-between sm:justify-start gap-2.5">
               <div class="flex items-center gap-2.5">
-                <div class="p-1.5 sm:p-2 bg-indigo-600 text-white rounded-xl shadow-xs shrink-0">
+                <div class="p-1.5 sm:p-2 bg-gradient-to-br from-indigo-600 to-violet-600 text-white rounded-xl shadow-sm shrink-0">
                   <i data-lucide="calendar" class="w-4 h-4 sm:w-5 sm:h-5"></i>
                 </div>
                 <div>
@@ -1521,7 +1690,7 @@
         } else {
           allOngoing.forEach((ow, idx) => {
             const card = document.createElement('div');
-            card.className = "bg-slate-50/70 hover:bg-white rounded-xl border border-slate-200 p-4 transition shadow-2xs hover:shadow-xs flex flex-col justify-between";
+            card.className = "lift bg-slate-50/70 hover:bg-white rounded-xl border border-slate-200/80 p-4 shadow-soft flex flex-col justify-between";
             card.innerHTML = `
               <div>
                 <div class="flex items-start justify-between gap-2 mb-2">
