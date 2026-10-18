@@ -235,6 +235,36 @@ def main():
         print(f"  {mon}: {count} payments")
     print("=" * 60)
     
+    # Sort payments in decreasing order of work month / date
+    def payment_sort_key(p):
+        d_from = p.get('date_from', '')
+        if d_from and '/' in d_from:
+            parts = d_from.split('/')
+            if len(parts) == 3:
+                try:
+                    return datetime(int(parts[2]), int(parts[1]), int(parts[0])).timestamp()
+                except Exception:
+                    pass
+        w_mon = p.get('work_month', '')
+        if w_mon and w_mon != 'Other':
+            try:
+                return datetime.strptime(w_mon, '%B %Y').timestamp()
+            except Exception:
+                pass
+        alt = p.get('payment_date') or p.get('transaction_date') or ''
+        if alt and '/' in alt:
+            parts = alt.split('/')
+            if len(parts) == 3:
+                try:
+                    return datetime(int(parts[2]), int(parts[1]), int(parts[0])).timestamp()
+                except Exception:
+                    pass
+        return 0
+
+    for w in passbook_data.get('worker_passbook', {}).values():
+        if 'payments' in w and isinstance(w['payments'], list):
+            w['payments'].sort(key=payment_sort_key, reverse=True)
+
     with open(PASSBOOK_JSON, "w", encoding="utf-8") as f:
         json.dump(passbook_data, f, ensure_ascii=False, separators=(',', ':'))
     print(f"[SUCCESS] Updated {PASSBOOK_JSON} successfully!")

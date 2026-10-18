@@ -1136,7 +1136,24 @@
 
       container.innerHTML = '';
       const workerData = passbookData?.worker_passbook?.[jcNo] || appData?.worker_passbook?.[jcNo];
-      const payments = workerData ? (workerData.payments || []) : [];
+      const rawPayments = workerData ? (workerData.payments || []) : [];
+      const getPaymentTs = (p) => {
+        if (p.date_from && p.date_from.includes('/')) {
+          const [d, m, y] = p.date_from.split('/').map(Number);
+          return new Date(y, m - 1, d).getTime();
+        }
+        if (p.work_month) {
+          const t = new Date(p.work_month + ' 1').getTime();
+          if (!isNaN(t)) return t;
+        }
+        const alt = p.payment_date || p.transaction_date || '';
+        if (alt && alt.includes('/')) {
+          const [d, m, y] = alt.split('/').map(Number);
+          return new Date(y, m - 1, d).getTime();
+        }
+        return 0;
+      };
+      const payments = rawPayments.slice().sort((a, b) => getPaymentTs(b) - getPaymentTs(a));
       const ftoLinks = passbookData?.fto_links || {};
 
       document.getElementById('modalTxCount').innerText = `${payments.length} Transaction(s) Found`;
