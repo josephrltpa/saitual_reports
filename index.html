@@ -652,9 +652,6 @@
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         appData = await response.json();
         
-        // Trigger background passbook prefetch immediately
-        fetchPassbookData();
-        
         // Update header metadata
         if (appData.metadata) {
           const date = new Date(appData.metadata.last_updated);
@@ -668,10 +665,20 @@
         document.getElementById('loadingState').classList.add('hidden');
         switchTab('jobcards');
         lucide.createIcons();
+
+        // Lazy-prefetch passbook in background after UI is fully interactive
+        setTimeout(() => {
+          fetchPassbookData();
+        }, 1200);
       } catch (err) {
+        console.error("Dashboard initialization error:", err);
         document.getElementById('loadingState').classList.add('hidden');
         document.getElementById('errorState').classList.remove('hidden');
-        document.getElementById('errorMessage').innerText = err.message;
+        document.getElementById('errorMessage').innerText = err.message || "Failed to load report data";
+        const lastUpdated = document.getElementById('lastUpdatedText');
+        if (lastUpdated) lastUpdated.innerText = 'Sync Error';
+        const spinIcon = document.getElementById('syncBadge')?.querySelector('i');
+        if (spinIcon) spinIcon.classList.remove('animate-spin');
       }
     }
 
@@ -1427,9 +1434,7 @@
       tbody.innerHTML = '';
 
       let totStarted = 0, totComp = 0, totIncomp = 0;
-
       const worksBadge = document.getElementById('worksBadgeCount');
-      if (worksBadge) worksBadge.innerText = works.length;
 
       if (works.length === 0) {
         tbody.innerHTML = `
@@ -1444,6 +1449,7 @@
         document.getElementById('kpiCompleted').innerText = '0';
         document.getElementById('kpiIncomplete').innerText = '0';
         document.getElementById('kpiRate').innerText = '0%';
+        if (worksBadge) worksBadge.innerText = '0';
         lucide.createIcons();
         return;
       }
@@ -1485,7 +1491,6 @@
       document.getElementById('kpiRate').innerText = rate + '%';
 
       // Update Nav Badge count with total Incomplete Works
-      const worksBadge = document.getElementById('worksBadgeCount');
       if (worksBadge) worksBadge.innerText = totIncomp.toLocaleString();
 
       // 2. Render Detailed Ongoing Projects Directory
