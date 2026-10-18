@@ -1169,20 +1169,39 @@
           const card = document.createElement('div');
           card.className = "bg-white rounded-xl border border-slate-200 p-4 shadow-sm space-y-3";
           card.innerHTML = `
-            <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-2">
+            <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-2.5">
               <div>
-                <span class="text-[11px] font-bold uppercase tracking-wide bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded">
-                  ${p.work_month || 'Payment Batch'}
-                </span>
-                <h4 class="font-bold text-slate-900 text-sm mt-1 leading-snug">${p.work_name || 'Community Labour Works'}</h4>
-                ${p.work_period ? `<div class="text-xs text-slate-500 mt-0.5">🗓️ Transaction Date: <b class="text-slate-700">${p.work_period}</b></div>` : ''}
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="text-[11px] font-bold uppercase tracking-wide bg-indigo-100 text-indigo-800 px-2.5 py-0.5 rounded-full inline-flex items-center gap-1 shadow-2xs">
+                    <i data-lucide="calendar" class="w-3 h-3 text-indigo-600"></i>
+                    <span>${p.work_month || 'Payment Batch'}</span>
+                  </span>
+                  ${p.wl_matched ? `<span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full inline-flex items-center gap-1"><span>✓ Verified Work Attendance</span></span>` : ''}
+                  ${p.wagelist_no ? `<span class="font-mono text-[10px] text-slate-500 bg-slate-100 border border-slate-200 px-1.5 py-0.5 rounded">WL: ${p.wagelist_no}</span>` : ''}
+                </div>
+
+                <h4 class="font-bold text-slate-900 text-sm mt-1.5 leading-snug">${p.work_name || 'Community Labour Works'}</h4>
+                ${p.work_code ? `<div class="font-mono text-[11px] text-slate-400 mt-0.5">Code: ${p.work_code}</div>` : ''}
+
+                <div class="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs text-slate-600 mt-2">
+                  ${p.work_period ? `<span class="inline-flex items-center gap-1 font-semibold text-slate-800 bg-slate-100 px-2 py-0.5 rounded-md"><i data-lucide="clock" class="w-3 h-3 text-indigo-600"></i><span>Work: <b>${p.work_period}</b></span></span>` : ''}
+                  ${p.payment_date || p.transaction_date ? `<span class="inline-flex items-center gap-1 text-slate-500"><i data-lucide="receipt" class="w-3 h-3 text-slate-400"></i><span>Disbursed: <b>${p.payment_date || p.transaction_date}</b></span></span>` : ''}
+                  ${p.emr_link ? `
+                    <a href="${p.emr_link}" target="_blank" class="inline-flex items-center gap-1 text-[11px] font-bold text-indigo-600 hover:text-indigo-800 hover:underline">
+                      <i data-lucide="file-text" class="w-3 h-3"></i>
+                      <span>eMR ${p.muster_roll_no || 'Slip'} ↗</span>
+                    </a>
+                  ` : ''}
+                </div>
               </div>
+
               <div class="flex sm:flex-col items-center sm:items-end justify-between sm:justify-start gap-1 shrink-0 pt-1.5 sm:pt-0 border-t sm:border-t-0 border-slate-100">
-                <span class="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full border font-bold ${badgeClass}">
+                <span class="inline-flex items-center gap-1 text-[11px] px-2.5 py-0.5 rounded-full border font-bold ${badgeClass}">
                   <i data-lucide="${badgeIcon}" class="w-3 h-3"></i>
                   ${p.status || 'Pending'}
                 </span>
                 <div class="text-lg sm:text-xl font-bold text-slate-900">₹${p.amount || '0'}</div>
+                ${p.rejection_reason ? `<div class="text-[10px] text-rose-600 font-semibold max-w-[180px] text-right mt-0.5">${p.rejection_reason}</div>` : ''}
               </div>
             </div>
 

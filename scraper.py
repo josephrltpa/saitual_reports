@@ -599,90 +599,74 @@ def scrape_fto_data(url, valid_jc_set=None):
     print(f"      -> Built passbook for {len(worker_passbook)} unique workers across target villages.")
     return {"fto_batches": fto_batches, "worker_passbook": worker_passbook}
 
-def build_wagelist_index(fin_data):
-    """
-    Index every wage list (muster roll) by its numeric WL id so FTO payments can be
-    cross-checked against the ACTUAL working period instead of the payment date.
-    Wagelist numbers like '2201003WL0000274' embed the muster roll number ('274').
-    Returns: {int_wl_id: [ {gp, block, work_name, work_code, link, date_from, date_to}, ... ]}
-    """
-    index = {}
-    emrs = fin_data.get('emrs') or fin_data.get('muster_rolls') or []
-    for m in emrs:
-        ms = str(m.get('muster_roll_no', '')).strip()
-        if not ms.isdigit():
-            continue
-        wl_id = int(ms)
-        entry = {
-            "gp": m.get('gp', ''),
-            "block": m.get('block', ''),
-            "work_code": m.get('work_code', ''),
-            "work_name": m.get('work_name', ''),
-            "link": m.get('link', ''),
-            "date_from": m.get('date_from', ''),
-            "date_to": m.get('date_to', ''),
-        }
-        index.setdefault(wl_id, []).append(entry)
-    return index
+def clean_job_card_no(s):
+    if not s:
+        return ""
+    m = re.search(r'(MZ-[0-9]{2}-[0-9]{3}-[0-9]{3}-[0-9]{3}/[0-9]+)', s)
+    if m:
+        return m.group(1).strip()
+    return re.sub(r'[^A-Za-z0-9/_-]', '', s).strip()
 
-def _parse_dmY(s):
-    parts = str(s or '').split('/')
-    if len(parts) == 3:
-        try:
-            return datetime(int(parts[2]), int(parts[1]), int(parts[0]))
-        except Exception:
-            return None
-    return None
-
-def enrich_passbook_with_working_periods(passbook_map, wl_index):
+def enrich_passbook_with_working_periods(passbook_map, fin_data=None):
     """
     For each payment record, resolve the authoritative Working Period and Work Month
-    from the Wage List No. (cross-checked against the eMR/muster roll data).
-    The Transaction Date is only a PAYMENT date — wages are paid days/weeks after the
-    work was done — so it must NOT define the displayed work month.
-    Adds: wl_work_period, wl_work_month, wl_matched, work_name (from eMR), emr_link.
+    from the Wagelist No. and Worker Job Card (cross-checked against the eMR sheet data).
+    Uses data/wagelist_work_cache.json.
     """
-    stats = collections.Counter()
+    cache_path = os.path.join(os.path.dirname(__file__), "data", "wagelist_work_cache.json")
+    wl_cache = {}
+    if os.path.exists(cache_path):
+        try:
+            with open(cache_path, "r", encoding="utf-8") as f:
+                wl_cache = json.load(f)
+        except Exception:
+            wl_cache = {}
+
+    wagelist_to_work = wl_cache.get('wagelist_to_work', {})
+    worker_wl_to_work = wl_cache.get('worker_wl_to_work', {})
+
+    matched_count = 0
+    fallback_count = 0
+
     for jc, w in passbook_map.items():
+        c_jc = clean_job_card_no(jc)
         for p in w.get('payments', []):
-            m_wl = re.search(r'WL(\d+)$', str(p.get('wagelist_no', '')))
-            tx_dt = _parse_dmY(p.get('transaction_date', ''))
-            candidates = wl_index.get(int(m_wl.group(1)), []) if m_wl else []
+            wl = p.get('wagelist_no', '').strip()
+            tx_date = p.get('transaction_date') or p.get('work_period', '')
+            p['payment_date'] = tx_date
 
-            # Disambiguate duplicate muster numbers across GPs via payment-date proximity
-            best = None
-            if candidates and tx_dt:
-                scored = []
-                for c in candidates:
-                    d_from = _parse_dmY(c['date_from'])
-                    d_to = _parse_dmY(c['date_to']) or d_from
-                    if not d_from:
-                        continue
-                    if d_from <= tx_dt <= d_to + timedelta(days=45):
-                        delta = abs((tx_dt - d_to).days)
-                    else:
-                        delta = min(abs((tx_dt - d_from).days), abs((tx_dt - d_to).days)) + 10000
-                    scored.append((delta, c))
-                if scored:
-                    best = min(scored)[1]
-            elif len(candidates) == 1:
-                best = candidates[0]
+            match = None
+            if c_jc and wl:
+                key = f"{c_jc}___{wl}"
+                match = worker_wl_to_work.get(key)
 
-            if best and best.get('date_from'):
+            if not match and wl:
+                match = wagelist_to_work.get(wl)
+
+            if match:
+                p['work_month'] = match.get('work_month', '')
+                p['work_period'] = match.get('work_period', '')
+                p['date_from'] = match.get('date_from', '')
+                p['date_to'] = match.get('date_to', '')
+                p['work_name'] = match.get('work_name', '')
+                p['work_code'] = match.get('work_code', '')
+                p['muster_roll_no'] = match.get('muster_roll_no', '')
+                p['emr_link'] = match.get('link', '')
                 p['wl_matched'] = True
-                p['wl_work_period'] = f"{best['date_from']} – {best['date_to']}" if best.get('date_to') else best['date_from']
-                p['wl_work_month'] = _parse_dmY(best['date_from']).strftime('%B %Y')
-                if best.get('work_name'):
-                    p['work_name'] = best['work_name']
-                if best.get('link'):
-                    p['emr_link'] = best['link']
-                stats['matched'] += 1
+                matched_count += 1
             else:
                 p['wl_matched'] = False
-                # Fallback: keep transaction-date-derived month but flag it as payment batch
-                stats['fallback'] += 1
-    print(f"      -> Wage-list cross-check: {stats['matched']} payments matched to eMR working periods, "
-          f"{stats['fallback']} fell back to payment date.")
+                fallback_count += 1
+                if tx_date and '/' in tx_date:
+                    parts = tx_date.split('/')
+                    if len(parts) == 3:
+                        try:
+                            dt = datetime(int(parts[2]), int(parts[1]), int(parts[0]))
+                            p['work_month'] = dt.strftime('%B %Y')
+                        except Exception:
+                            pass
+
+    print(f"      -> Wage-list cross-check: {matched_count} payments matched to true eMR working periods, {fallback_count} fell back to payment date.")
 
 def run_pipeline():
     """Main pipeline executing all modules and saving to data/latest.json."""
@@ -712,8 +696,7 @@ def run_pipeline():
 
     # Step 4b: Cross-check every payment's Wagelist No. against eMR working periods
     # so the passbook shows the month of WORK, not the month of PAYMENT.
-    wl_index = build_wagelist_index(fin_data)
-    enrich_passbook_with_working_periods(fto_data['worker_passbook'], wl_index)
+    enrich_passbook_with_working_periods(fto_data['worker_passbook'], fin_data)
     
     # Assemble core dashboard JSON payload (compact, sub-second load)
     core_data = {
