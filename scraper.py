@@ -362,8 +362,8 @@ def enrich_emr_working_dates(fin_data):
                 l['work_period'] = f"{c['date_from']} – {c['date_to']}"
 
 def scrape_incomplete_works(url):
-    """Module 3: Scrape Incomplete Works by GP."""
-    print("[3/5] Scraping Incomplete Works...")
+    """Module 3: Scrape Incomplete Works by GP (Current FY and Total) with drilldown works."""
+    print("[3/5] Scraping Incomplete Works & Ongoing Projects...")
     html = fetch_html(url)
     if not html:
         return []
@@ -378,30 +378,86 @@ def scrape_incomplete_works(url):
         for row in rows:
             tds = row.find_all(['th', 'td'])
             cols = [c.get_text(strip=True) for c in tds]
-            if len(cols) >= 5 and cols[0].isdigit():
+            if len(cols) >= 22 and cols[0].isdigit():
                 panchayat = cols[1]
                 if not is_target_village(panchayat):
                     continue
-                started = cols[2]
-                completed = cols[3]
-                not_completed = cols[4]
-                rate = cols[5] if len(cols) > 5 else "0"
                 
-                # Check for drill-down link
-                link_tag = row.find('a')
-                link = urllib.parse.urljoin(url, link_tag.get('href', '')) if link_tag else ""
+                # Official VB-G RAM G Column Indices:
+                # Cols 14-17: FY 2026-2027 (Current Year)
+                # Cols 18-21: Cumulative Grand Total
+                tot_started = cols[18]
+                tot_completed = cols[19]
+                tot_incomplete = cols[20]
+                tot_rate = cols[21] if len(cols) > 21 else "0"
+
+                fy_started = cols[14]
+                fy_completed = cols[15]
+                fy_incomplete = cols[16]
+                fy_rate = cols[17] if len(cols) > 17 else "0"
+                
+                # Check for drill-down link (on incomplete count or row)
+                a_tag = tds[16].find('a') if len(tds) > 16 and tds[16].find('a') else None
+                if not a_tag and len(tds) > 20:
+                    a_tag = tds[20].find('a')
+                if not a_tag:
+                    a_tag = row.find('a')
+                link = urllib.parse.urljoin(url, a_tag.get('href', '')) if a_tag else ""
                 
                 works.append({
                     "sno": cols[0],
                     "panchayat": panchayat,
-                    "works_started": started,
-                    "works_completed": completed,
-                    "not_completed": not_completed,
-                    "completion_rate": rate,
-                    "details_link": link
+                    "works_started": tot_started,
+                    "works_completed": tot_completed,
+                    "not_completed": tot_incomplete,
+                    "completion_rate": tot_rate,
+                    "fy_started": fy_started,
+                    "fy_completed": fy_completed,
+                    "fy_incomplete": fy_incomplete,
+                    "fy_rate": fy_rate,
+                    "details_link": link,
+                    "ongoing_works": []
                 })
+
+    # Fetch ongoing work items from drill-down links concurrently
+    def fetch_drilldown(item):
+        link = item.get("details_link")
+        if not link:
+            return
+        b_html = fetch_html(link, referer=url, timeout=15)
+        if not b_html:
+            return
+        b_soup = BeautifulSoup(b_html, 'html.parser')
+        tables = b_soup.find_all('table')
+        if not tables:
+            return
+        d_table = tables[-1]
+        for r in d_table.find_all('tr'):
+            cells = [c.get_text(strip=True) for c in r.find_all(['th', 'td'])]
+            if cells and cells[0].isdigit():
+                raw_name = cells[1] if len(cells) > 1 else ''
+                status = cells[2] if len(cells) > 2 else ''
+                agency = cells[3] if len(cells) > 3 else ''
+                category = cells[4] if len(cells) > 4 else ''
+                est_cost = cells[5] if len(cells) > 5 else '0'
+                m_code = re.search(r'\((22[0-9A-Za-z/_-]+)\)', raw_name)
+                code = m_code.group(1) if m_code else ''
+                name = raw_name[:m_code.start()].strip() if m_code else raw_name
+                item["ongoing_works"].append({
+                    "sno": cells[0],
+                    "work_name": name,
+                    "work_code": code,
+                    "status": status,
+                    "agency": agency,
+                    "category": category,
+                    "estimated_cost_lakhs": est_cost
+                })
+
+    with ThreadPoolExecutor(max_workers=10) as ex:
+        list(ex.map(fetch_drilldown, works))
                 
-    print(f"      -> Found {len(works)} Panchayat work completion summaries.")
+    total_ongoing = sum(len(w.get('ongoing_works', [])) for w in works)
+    print(f"      -> Successfully extracted {len(works)} Panchayat summaries and {total_ongoing} detailed ongoing projects.")
     return works
 
 def scrape_fto_data(url, valid_jc_set=None):

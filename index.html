@@ -397,6 +397,24 @@
           </table>
         </div>
       </div>
+
+      <!-- Ongoing Works Detailed Directory -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 mt-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 pb-3 border-b border-slate-100">
+          <div>
+            <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+              <i data-lucide="list-todo" class="w-5 h-5 text-amber-600"></i>
+              <span>Active Ongoing Works Directory</span>
+            </h2>
+            <p class="text-xs text-slate-500 mt-0.5">Individual projects currently in progress and not yet marked completed on the official portal.</p>
+          </div>
+          <span id="ongoingWorksCountBadge" class="text-xs bg-amber-100 text-amber-900 font-bold px-3 py-1 rounded-full shrink-0">0 Ongoing Projects</span>
+        </div>
+
+        <div id="ongoingWorksCardsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+          <!-- Rendered via JS -->
+        </div>
+      </div>
     </section>
 
     <!-- TAB 4: FINANCIALS -->
@@ -1430,6 +1448,7 @@
         return;
       }
 
+      // 1. Calculate totals and render summary table
       works.forEach(w => {
         const started = parseInt(w.works_started) || 0;
         const comp = parseInt(w.works_completed) || 0;
@@ -1442,24 +1461,94 @@
         tr.className = "hover:bg-slate-50/80 transition";
         tr.innerHTML = `
           <td class="py-2.5 px-3 font-bold text-slate-900">${w.panchayat}</td>
-          <td class="py-2.5 px-3 text-slate-700">${started}</td>
+          <td class="py-2.5 px-3 text-slate-700 font-medium">${started}</td>
           <td class="py-2.5 px-3 text-emerald-700 font-semibold">${comp}</td>
           <td class="py-2.5 px-3 text-amber-700 font-bold">${incomp}</td>
           <td class="py-2.5 px-3 text-slate-600">${w.completion_rate}%</td>
           <td class="py-2.5 px-3 text-right">
             ${w.details_link ? `
-              <a href="${w.details_link}" target="_blank" class="text-xs text-indigo-600 font-semibold hover:underline">View Works ➔</a>
+              <a href="${w.details_link}" target="_blank" class="inline-flex items-center gap-1 text-xs text-indigo-600 font-semibold hover:underline bg-indigo-50 hover:bg-indigo-100 px-2.5 py-1 rounded-lg border border-indigo-200 transition">
+                <span>Official Report</span>
+                <i data-lucide="external-link" class="w-3 h-3"></i>
+              </a>
             ` : '-'}
           </td>
         `;
         tbody.appendChild(tr);
       });
 
-      document.getElementById('kpiStarted').innerText = totStarted;
-      document.getElementById('kpiCompleted').innerText = totComp;
-      document.getElementById('kpiIncomplete').innerText = totIncomp;
+      // Update KPIs
+      document.getElementById('kpiStarted').innerText = totStarted.toLocaleString();
+      document.getElementById('kpiCompleted').innerText = totComp.toLocaleString();
+      document.getElementById('kpiIncomplete').innerText = totIncomp.toLocaleString();
       const rate = totStarted > 0 ? ((totComp / totStarted) * 100).toFixed(1) : 0;
       document.getElementById('kpiRate').innerText = rate + '%';
+
+      // Update Nav Badge count with total Incomplete Works
+      const worksBadge = document.getElementById('worksBadgeCount');
+      if (worksBadge) worksBadge.innerText = totIncomp.toLocaleString();
+
+      // 2. Render Detailed Ongoing Projects Directory
+      const ongoingGrid = document.getElementById('ongoingWorksCardsGrid');
+      const ongoingBadge = document.getElementById('ongoingWorksCountBadge');
+      
+      const allOngoing = [];
+      works.forEach(w => {
+        (w.ongoing_works || []).forEach(ow => {
+          allOngoing.push({ ...ow, gp: w.panchayat });
+        });
+      });
+
+      if (ongoingBadge) {
+        ongoingBadge.innerText = `${allOngoing.length.toLocaleString()} Ongoing Projects`;
+      }
+
+      if (ongoingGrid) {
+        ongoingGrid.innerHTML = '';
+        if (allOngoing.length === 0) {
+          ongoingGrid.innerHTML = `
+            <div class="col-span-full py-10 text-center text-slate-400 bg-slate-50/60 rounded-xl border border-dashed border-slate-200">
+              <i data-lucide="check-circle" class="w-8 h-8 mx-auto mb-2 text-emerald-400"></i>
+              <p class="font-bold text-slate-700">No ongoing projects currently active</p>
+              <p class="text-xs text-slate-400 mt-1">All works for this selection have been recorded as completed or none are registered.</p>
+            </div>
+          `;
+        } else {
+          allOngoing.forEach((ow, idx) => {
+            const card = document.createElement('div');
+            card.className = "bg-slate-50/70 hover:bg-white rounded-xl border border-slate-200 p-4 transition shadow-2xs hover:shadow-xs flex flex-col justify-between";
+            card.innerHTML = `
+              <div>
+                <div class="flex items-start justify-between gap-2 mb-2">
+                  <span class="inline-flex items-center gap-1 font-semibold text-slate-800 bg-white border border-slate-200 text-[11px] px-2 py-0.5 rounded-md shadow-2xs">
+                    <i data-lucide="map-pin" class="w-3 h-3 text-emerald-600"></i>
+                    <span>${ow.gp} GP</span>
+                  </span>
+                  <span class="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200 shrink-0">
+                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                    <span>${ow.status || 'On Going'}</span>
+                  </span>
+                </div>
+                <h4 class="font-bold text-slate-900 text-sm leading-snug">${ow.work_name || 'Community Development Work'}</h4>
+                ${ow.work_code ? `<div class="font-mono text-[11px] text-slate-400 mt-1">Code: ${ow.work_code}</div>` : ''}
+              </div>
+
+              <div class="mt-3.5 pt-3 border-t border-slate-200/80 flex items-center justify-between text-xs text-slate-600">
+                <div class="flex items-center gap-1.5 truncate pr-2">
+                  <i data-lucide="tag" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
+                  <span class="truncate text-[11px] text-slate-500">${ow.category || 'General Works'}</span>
+                </div>
+                ${ow.estimated_cost_lakhs ? `
+                  <div class="shrink-0 font-bold text-slate-800 text-[11px] bg-white border border-slate-200 px-2 py-0.5 rounded-md shadow-2xs">
+                    Est: ₹${ow.estimated_cost_lakhs} L
+                  </div>
+                ` : ''}
+              </div>
+            `;
+            ongoingGrid.appendChild(card);
+          });
+        }
+      }
       lucide.createIcons();
     }
 
