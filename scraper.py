@@ -178,7 +178,9 @@ def scrape_financial_and_works(url_financial):
             for a in r.find_all('a'):
                 href = a.get('href', '')
                 if 'mustworkexpn' in href:
-                    must_links.append((p_name, urllib.parse.urljoin(url_financial, href)))
+                    clean_href = re.sub(r'^(\.\./)+', '', href)
+                    full_must_url = urllib.parse.urljoin("https://vbgramgrep.dord.gov.in/VBGRAMG/", clean_href)
+                    must_links.append((p_name, full_must_url))
                     
     print(f"      -> Extracted {len(gp_summaries)} GP financial summaries. Fetching master works...")
     
@@ -676,7 +678,7 @@ def run_pipeline():
     print(f"  Execution Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("="*60)
     
-    URL_FINANCIAL = "https://vbgramgrep.dord.gov.in/VBGRAMG/writereaddata/citizen_out/funddisreport_2201004_eng_2627_.html"
+    URL_FINANCIAL = "https://vbgramgrep.dord.gov.in/VBGRAMG/citizen_html/funddisreport.aspx?payload=ZSZBwCh2w5sSjn7GRJCNVGUXWXL9isRxIGZwUQrB-28NViAXcKaRWyQyS-1cH59w59DJwjHhtQRr3iQnuGK8J72s3C-UQ_Z2c1DQAtuM39e_dhJC1jxh7hp1S2STIpfY6UCOSRK7iQs7bx_umIufKiyBULl9NSWKnIcHKWK13nJtuOQ4gVlpCO8C_vWGi-tnVHN8JbFHMfGDODXTiJpHYkHj11xxWcmgM23mD8LdZMo"
     URL_INCOMPLETE = "https://vbgramgrep.dord.gov.in/VBGRAMG/takenup_compwrk.aspx?payload=HrhTOXOkRWSvWkPOZ_FD-zDusggY8KaZ-YfHGly4gbZ4ach36_KPAGrRi_5GDjD_uq577H-xES5jbGiaHH8sJkB3fnjZfPxpsVvCUjQkjgwReKe0xCK4dCnrGunQ58JHdhCM8AKBOTCHW_TlgnVAefyRuYP_MoXPJNWxmOHBSOIJ4zAA1U3K-DwcnJc9UJIScCKSu5a7Nlgr-Wf__4gk6eEdpJb9yr4KGfhuvvWxuYuiNEhZPYFfOyLPFfJsm4TKquNKVoLW-gMa8e51gDiPGdkyNkg8Lo85n_p80_P90dE"
     URL_FTO = "https://vbgramgrep.dord.gov.in/VBGRAMG/FTO/fto_sign_detail.aspx?payload=-XpNbKKbc0SRHHbZyGlHi-T05r8VoBBgxmxgldBxgj11NWY0HK8J55IFv4eiqv-J99zeqoLM8CEm9EQlbLIMrLs0hVJ5uDNUe0Rm73q8gS9NYowrh72DcOx0C573pqP1CGg6srmqscTu5RyFEreRiVutiJNh-VHrlwa9Nh1XWhaPKrsKVJBoc-wj0IqF4RhAy5dZBnxnwvqx2CohEJgfpn6e-Nm4BQ523Kqw_9ECRfL1c4fkJnH57igAmG_Sw4MNxL4T-asIqUAXVgsNbiM25i3eEjQ6koykK0sVD2sXgRNz-N-UH07FjXcslifY4cRs"
     
@@ -751,6 +753,14 @@ def run_pipeline():
     print(f" [STATS] Active Cards: {len(active_jcs)} | eMRs: {len(fin_data['emrs'])} | Master Works: {len(fin_data['works'])} | Passbook Workers: {len(fto_data['worker_passbook'])}")
     print(f" [TIME] Completed in {duration:.2f} seconds.")
     print("="*60)
+
+    # Automatically run wagelist work reconciliation and reverse chronological sorting
+    print("[POST-PROCESS] Reconciling Wagelists & Sorting Worker Passbooks...")
+    try:
+        import sync_passbook_working_months
+        sync_passbook_working_months.main()
+    except Exception as e:
+        print(f"[WARN] Error running sync_passbook_working_months: {e}")
 
 if __name__ == "__main__":
     run_pipeline()
